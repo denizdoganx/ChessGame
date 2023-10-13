@@ -22,8 +22,14 @@ public class Movement {
 	
 	private Stone eatenStone;
 	
+	private GameArea gameArea;
+	
 	private Movement() {
 		
+	}
+	
+	public void setGameAreaObject(GameArea gameArea) {
+		this.gameArea = gameArea;
 	}
 	
 	public static Movement getInstance() {
@@ -92,11 +98,10 @@ public class Movement {
 		firstStone.setMoved(true);
 		deleteMoveableLocationsTracks();
 		GameArea.stepNumber++;
-		return false;
+		return gameArea.isCheck();
 	}
 	
 	public boolean eatAgainstStone() {
-		performMovement();
-		return GameArea.stones.remove(this.eatenStone);
+		return GameArea.stones.remove(this.eatenStone) && performMovement();
 	}
 }

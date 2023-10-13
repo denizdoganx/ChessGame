@@ -31,6 +31,8 @@ public class GameArea extends JPanel implements ActionListener {
 	 * Create the panel.
 	 */
 	
+	private GamePage parentFrame;
+	
 	public static Grid[][] gameArray;
 	
 	public static ArrayList<Stone> stones;
@@ -45,7 +47,12 @@ public class GameArea extends JPanel implements ActionListener {
 	
 	Movement movement;
 	
-	public GameArea() {
+	public GameArea(GamePage parentFrame) {
+		
+		this.parentFrame = parentFrame;
+		Movement.getInstance().setGameAreaObject(this);
+		
+		setBackground(new Color(0, 0, 0));
 		running = false;
 		setLayout(new GridLayout(8, 8, 0, 0));
 		gameArray = new Grid[8][8];
@@ -232,5 +239,74 @@ public class GameArea extends JPanel implements ActionListener {
 		this.repaint();
 		
 	}
+
+	public boolean isCheck() {
+		ArrayList<Stone> allEatableStones = new ArrayList<>();
+		ArrayList<Stone> referenceCarrier;
+		boolean isCheck = false;
+		boolean isWhite = false;
+		if(stepNumber % 2 == 0) {
+			// white stones will play
+			referenceCarrier = getStonesWithGivenColor("black");
+		}
+		else {
+			// black stones will play
+			referenceCarrier = getStonesWithGivenColor("white");
+		}
+		
+		for(Stone stone : referenceCarrier) {
+			ArrayList<Point> moveableLocations = stone.showMoveableLocations();
+			
+			for(Point point : moveableLocations) {
+				Stone tempStone = discoverStone((int)point.getX(), (int)point.getY());
+				if(tempStone != null) {
+					allEatableStones.add(tempStone);
+					
+				}
+			}
+		}
+		
+		
+		for(Stone stone : allEatableStones) {
+			if(stone.getName().equals("king")) {
+				isCheck = true;
+				isWhite = stone.isBlack();
+			}
+		}
+		
+		if(isCheck) {
+			if(!isWhite) {
+				parentFrame.lblCheckAndGameOver.setText("King from White Stones");
+			}
+			else {
+				parentFrame.lblCheckAndGameOver.setText("King from Black Stones");
+			}
+		}
+		else {
+			parentFrame.lblCheckAndGameOver.setText("");
+		}
+		return isCheck;
+	}
 	
+	
+	private  ArrayList<Stone> getStonesWithGivenColor(String color){
+		ArrayList<Stone> stonesWithGivenColor = new ArrayList<>();
+		
+
+		if(color.equals("white")) {
+			for(Stone stone : stones) {
+				if(!stone.isBlack()) {
+					stonesWithGivenColor.add(stone);
+				}
+			}
+		}
+		else {
+			for(Stone stone : stones) {
+				if(stone.isBlack()) {
+					stonesWithGivenColor.add(stone);
+				}
+			}
+		}
+		return stonesWithGivenColor;
+	}
 }
