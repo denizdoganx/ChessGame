@@ -3,23 +3,35 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.Stone;
+
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class GamePage extends JFrame {
 
 	private JPanel contentPane;
 	public JLabel lblCheckAndGameOver;
-
+	public JLabel numOfMoves;
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public GamePage() {
+	public GamePage(boolean isSavedGame) {
 		
 		
 		
@@ -36,7 +48,7 @@ public class GamePage extends JFrame {
 		panel.setBackground(new Color(0, 0, 0));
 		panel.setBounds(50, 50, 600, 614);
 		panel.setLayout(new GridLayout(1, 1, 0, 0));
-		panel.add(new GameArea(this));
+		panel.add(new GameArea(this, isSavedGame));
 		contentPane.add(panel);
 		
 		JPanel panel_1 = new JPanel();
@@ -225,7 +237,7 @@ public class GamePage extends JFrame {
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(0, 0, 0));
-		panel_5.setBounds(700, 50, 274, 375);
+		panel_5.setBounds(700, 50, 274, 377);
 		contentPane.add(panel_5);
 		panel_5.setLayout(new GridLayout(2, 1, 0, 5));
 		
@@ -257,11 +269,80 @@ public class GamePage extends JFrame {
 		lblCheckAndGameOver.setForeground(new Color(255, 0, 0));
 		lblCheckAndGameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCheckAndGameOver.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblCheckAndGameOver.setBounds(700, 436, 274, 46);
+		lblCheckAndGameOver.setBounds(700, 438, 274, 46);
 		contentPane.add(lblCheckAndGameOver);
+		
+		JLabel lblNewLabel_33 = new JLabel("");
+		lblNewLabel_33.setForeground(new Color(255, 0, 0));
+		lblNewLabel_33.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblNewLabel_33.setBounds(700, 495, 274, 46);
+		contentPane.add(lblNewLabel_33);
+		
+		numOfMoves = new JLabel("Number of Moves : ");
+		numOfMoves.setForeground(new Color(255, 0, 0));
+		numOfMoves.setFont(new Font("Tahoma", Font.BOLD, 15));
+		numOfMoves.setBounds(700, 552, 274, 46);
+		contentPane.add(numOfMoves);
+		
+		JButton btnNewButton = new JButton("Save This Game");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					saveGame();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setForeground(new Color(255, 0, 0));
+		btnNewButton.setBackground(new Color(0, 0, 0));
+		btnNewButton.setFocusable(false);
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnNewButton.setBounds(700, 609, 274, 55);
+		contentPane.add(btnNewButton);
 		
 		
 		setVisible(true);
 		setLocationRelativeTo(null);
 	}
+	
+	public void saveGame() throws IOException {
+		File file = new File(StartPage.filePath);
+		int result = -1;
+		if(!file.exists()) {
+			file.createNewFile();
+			result = 0;
+		}
+		else {
+			result = JOptionPane.showConfirmDialog(null, "There is a previously saved game. Do you approve to be written on it?", "?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		}
+		if(result == 0) {
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String rowString;
+			for(Stone stone : GameArea.stones) {
+				rowString = "";
+				rowString += stone.getI();
+				rowString += ";";
+				rowString += stone.getJ();
+				rowString += ";";
+				rowString += stone.getName();
+				rowString += ";";
+				rowString += stone.isMoved();
+				rowString += ";";
+				rowString += stone.isBlack();
+				rowString += ";";
+				rowString += stone.getIconPath();
+				rowString += ";";
+				bw.write(rowString);
+				bw.newLine();
+			}
+			bw.write("stepnumber " + String.valueOf(GameArea.stepNumber));
+			bw.newLine();
+			bw.close();
+			JOptionPane.showMessageDialog(null, "Saved Successfully!", "Info", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
 }

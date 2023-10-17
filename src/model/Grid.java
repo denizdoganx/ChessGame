@@ -99,7 +99,7 @@ public class Grid extends JLabel implements MouseListener {
 					if(isEatable) {
 						Point point = new Point(getI(), getJ());
 						ArrayList<Point> moveableLocations = movement.getMoveableLocations();
-						if(moveableLocations.contains(point)) {
+						if(moveableLocations != null && moveableLocations.contains(point)) {
 							movement.setEatenStone(stone);
 							movement.setEndGrid(this);
 							movement.eatAgainstStone();

@@ -31,7 +31,7 @@ public class GameArea extends JPanel implements ActionListener {
 	 * Create the panel.
 	 */
 	
-	private GamePage parentFrame;
+	public GamePage parentFrame;
 	
 	public static Grid[][] gameArray;
 	
@@ -44,27 +44,35 @@ public class GameArea extends JPanel implements ActionListener {
 	Timer timer;
 	
 	boolean running;
-	
+	boolean isSavedGame;
 	Movement movement;
 	
-	public GameArea(GamePage parentFrame) {
-		
+	public GameArea(GamePage parentFrame, boolean isSavedGame) {
+		this.isSavedGame = isSavedGame;
 		this.parentFrame = parentFrame;
 		Movement.getInstance().setGameAreaObject(this);
-		
 		setBackground(new Color(0, 0, 0));
 		running = false;
 		setLayout(new GridLayout(8, 8, 0, 0));
 		gameArray = new Grid[8][8];
-		stones = new ArrayList<>();
+		if(isSavedGame) {
+			stones = StartPage.registeredStones;
+			stepNumber = StartPage.registeredStepNumber;
+		}
+		else {
+			stones = new ArrayList<>();
+			stepNumber = 0;
+		}
 		startTheGame();
 	}
 
 	private void startTheGame() {
 		fillInTheGrids();
+		if(isSavedGame) {
+			setEmptyForAllGrids();
+		}
 		running = true;
 		movement = Movement.getInstance();
-		stepNumber = 0;
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -140,89 +148,90 @@ public class GameArea extends JPanel implements ActionListener {
 					}
 				}
 				
-				if(i <= 1) {
-					
-					if(i == 1) {
-						stone = new Pawn();
-						stone.setIconPath("images/b_pawn.png");
-						stone.setName("pawn");
-					}
-					else {
-						if(j == 0 || j == 7) {
-							stone = new Rook();
-							stone.setIconPath("images/b_rook.png");
-							stone.setName("rook");
-						}
-						else if(j == 1 || j == 6) {
-							stone = new Knight();
-							stone.setIconPath("images/b_knight.png");
-							stone.setName("knight");
-						}
-						else if(j == 2 || j == 5) {
-							stone = new Bishop();
-							stone.setIconPath("images/b_bishop.png");
-							stone.setName("bishop");
-						}
-						else if(j == 3) {
-							stone = new Queen();
-							stone.setIconPath("images/b_queen.png");
-							stone.setName("queen");
+				if(!isSavedGame) {
+					if(i <= 1) {
+						
+						if(i == 1) {
+							stone = new Pawn();
+							stone.setIconPath("images/b_pawn.png");
+							stone.setName("pawn");
 						}
 						else {
-							stone = new King();
-							stone.setIconPath("images/b_king.png");
-							stone.setName("king");
+							if(j == 0 || j == 7) {
+								stone = new Rook();
+								stone.setIconPath("images/b_rook.png");
+								stone.setName("rook");
+							}
+							else if(j == 1 || j == 6) {
+								stone = new Knight();
+								stone.setIconPath("images/b_knight.png");
+								stone.setName("knight");
+							}
+							else if(j == 2 || j == 5) {
+								stone = new Bishop();
+								stone.setIconPath("images/b_bishop.png");
+								stone.setName("bishop");
+							}
+							else if(j == 3) {
+								stone = new Queen();
+								stone.setIconPath("images/b_queen.png");
+								stone.setName("queen");
+							}
+							else {
+								stone = new King();
+								stone.setIconPath("images/b_king.png");
+								stone.setName("king");
+							}
 						}
+						stone.setI(i);
+						stone.setJ(j);
+						stones.add(stone);
+						stone.setBlack(true);
+						grid.setEmpty(false);
 					}
-					stone.setI(i);
-					stone.setJ(j);
-					stones.add(stone);
-					stone.setBlack(true);
-					grid.setEmpty(false);
-				}
-				
-				else if(i >= 6) {
-					if(i == 6) {
-						stone = new Pawn();
-						stone.setIconPath("images/w_pawn.png");
-						stone.setName("pawn");
-					}
-					else {
-						if(j == 0 || j == 7) {
-							stone = new Rook();
-							stone.setIconPath("images/w_rook.png");
-							stone.setName("rook");
-						}
-						else if(j == 1 || j == 6) {
-							stone = new Knight();
-							stone.setIconPath("images/w_knight.png");
-							stone.setName("knight");
-						}
-						else if(j == 2 || j == 5) {
-							stone = new Bishop();
-							stone.setIconPath("images/w_bishop.png");
-							stone.setName("bishop");
-						}
-						else if(j == 3) {
-							stone = new Queen();
-							stone.setIconPath("images/w_queen.png");
-							stone.setName("queen");
+					else if(i >= 6) {
+						if(i == 6) {
+							stone = new Pawn();
+							stone.setIconPath("images/w_pawn.png");
+							stone.setName("pawn");
 						}
 						else {
-							stone = new King();
-							stone.setIconPath("images/w_king.png");
-							stone.setName("king");
+							if(j == 0 || j == 7) {
+								stone = new Rook();
+								stone.setIconPath("images/w_rook.png");
+								stone.setName("rook");
+							}
+							else if(j == 1 || j == 6) {
+								stone = new Knight();
+								stone.setIconPath("images/w_knight.png");
+								stone.setName("knight");
+							}
+							else if(j == 2 || j == 5) {
+								stone = new Bishop();
+								stone.setIconPath("images/w_bishop.png");
+								stone.setName("bishop");
+							}
+							else if(j == 3) {
+								stone = new Queen();
+								stone.setIconPath("images/w_queen.png");
+								stone.setName("queen");
+							}
+							else {
+								stone = new King();
+								stone.setIconPath("images/w_king.png");
+								stone.setName("king");
+							}
 						}
+						stone.setI(i);
+						stone.setJ(j);
+						stones.add(stone);
+						stone.setBlack(false);
+						grid.setEmpty(false);
+						
 					}
-					stone.setI(i);
-					stone.setJ(j);
-					stones.add(stone);
-					stone.setBlack(false);
-					grid.setEmpty(false);
-					
-				}
-				else {
-					grid.setEmpty(true);
+					else  {
+						grid.setEmpty(true);
+					}
 				}
 				gameArray[i][j] = grid;
 				add(grid);
@@ -230,26 +239,40 @@ public class GameArea extends JPanel implements ActionListener {
 		}
 	}
 
+	private void setEmptyForAllGrids() {
+		for(int i = 0;i < 8; i++) {
+			for(int j = 0;j < 8; j++) {
+				gameArray[i][j].setEmpty(true);
+			}
+		}
+		
+		for(Stone stone : stones) {
+			gameArray[stone.getI()][stone.getJ()].setEmpty(false);
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//System.out.println(timer.getDelay());
 		if(running) {
 			// we should write here movement events for each stone.
+			
+			this.parentFrame.numOfMoves.setText("Number of Moves : " + stepNumber);
+			
 		}
 		this.repaint();
 		
 	}
 
-	public boolean isCheck() {
+	public boolean isCheck(String color) {
 		ArrayList<Stone> allEatableStones = new ArrayList<>();
-		ArrayList<Stone> referenceCarrier;
+		ArrayList<Stone> referenceCarrier = null;
 		boolean isCheck = false;
-		boolean isWhite = false;
-		if(stepNumber % 2 == 0) {
+		if(color.equals("black")) {
 			// white stones will play
 			referenceCarrier = getStonesWithGivenColor("black");
 		}
-		else {
+		else if(color.equals("white")) {
 			// black stones will play
 			referenceCarrier = getStonesWithGivenColor("white");
 		}
@@ -270,29 +293,15 @@ public class GameArea extends JPanel implements ActionListener {
 		for(Stone stone : allEatableStones) {
 			if(stone.getName().equals("king")) {
 				isCheck = true;
-				isWhite = stone.isBlack();
 			}
 		}
 		
-		if(isCheck) {
-			if(!isWhite) {
-				parentFrame.lblCheckAndGameOver.setText("King from White Stones");
-			}
-			else {
-				parentFrame.lblCheckAndGameOver.setText("King from Black Stones");
-			}
-		}
-		else {
-			parentFrame.lblCheckAndGameOver.setText("");
-		}
 		return isCheck;
 	}
 	
 	
 	private  ArrayList<Stone> getStonesWithGivenColor(String color){
 		ArrayList<Stone> stonesWithGivenColor = new ArrayList<>();
-		
-
 		if(color.equals("white")) {
 			for(Stone stone : stones) {
 				if(!stone.isBlack()) {
