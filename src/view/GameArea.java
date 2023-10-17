@@ -259,6 +259,7 @@ public class GameArea extends JPanel implements ActionListener {
 			
 			this.parentFrame.numOfMoves.setText("Number of Moves : " + stepNumber);
 			
+			
 		}
 		this.repaint();
 		

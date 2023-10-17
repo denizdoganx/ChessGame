@@ -24,7 +24,7 @@ public class Pawn extends Stone {
 					realRowIndex = getI() + rowIndex;
 					realColumnIndex = getJ() + columnIndex;
 					if(realRowIndex >= 0 && realRowIndex <= 7 && realColumnIndex >= 0 && realColumnIndex <= 7 
-							&& !isMoved() && gameArray[realRowIndex][realColumnIndex].isEmpty()) {
+							&& !isMoved() && gameArray[realRowIndex][realColumnIndex].isEmpty() && gameArray[realRowIndex-1][realColumnIndex].isEmpty()) {
 						
 						moveableLocations.add(new Point(realRowIndex, realColumnIndex));
 					}
@@ -83,7 +83,7 @@ public class Pawn extends Stone {
 					realRowIndex = getI() + rowIndex;
 					realColumnIndex = getJ() + columnIndex;
 					if(realRowIndex >= 0 && realRowIndex <= 7 && realColumnIndex >= 0 && realColumnIndex <= 7 
-							&& !isMoved() && gameArray[realRowIndex][realColumnIndex].isEmpty()) {
+							&& !isMoved() && gameArray[realRowIndex][realColumnIndex].isEmpty() && gameArray[realRowIndex+1][realColumnIndex].isEmpty()) {
 						moveableLocations.add(new Point(realRowIndex, realColumnIndex));
 					}
 					break;

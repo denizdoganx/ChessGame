@@ -1,0 +1,20 @@
+0;3;rook;true;true;images/b_rook.png;
+1;3;knight;true;true;images/b_knight.png;
+0;2;king;true;true;images/b_king.png;
+0;5;bishop;false;true;images/b_bishop.png;
+0;6;knight;false;true;images/b_knight.png;
+3;0;pawn;true;true;images/b_pawn.png;
+3;1;pawn;true;true;images/b_pawn.png;
+3;2;pawn;true;true;images/b_pawn.png;
+3;3;pawn;true;true;images/b_pawn.png;
+2;3;pawn;true;true;images/b_pawn.png;
+4;0;pawn;true;false;images/w_pawn.png;
+4;1;pawn;true;false;images/w_pawn.png;
+4;3;pawn;true;false;images/w_pawn.png;
+6;4;pawn;false;false;images/w_pawn.png;
+6;7;pawn;false;false;images/w_pawn.png;
+5;5;rook;true;false;images/w_rook.png;
+7;2;king;true;false;images/w_king.png;
+7;7;rook;false;false;images/w_rook.png;
+4;2;pawn;true;false;images/w_pawn.png;
+stepnumber 35

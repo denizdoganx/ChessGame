@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 
 import model.Grid;
 import model.Stone;
@@ -168,6 +169,130 @@ public class Movement {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean makeQueenSideCastling() {
+		boolean flag = false;;
+		if(GameArea.stepNumber % 2 == 0) {
+			Stone rook = GameArea.discoverStone(7, 0);
+			Stone empty1 = GameArea.discoverStone(7, 1);
+			Stone empty2 = GameArea.discoverStone(7, 2);
+			Stone empty3 = GameArea.discoverStone(7, 3);
+			Stone king = GameArea.discoverStone(7, 4);
+			if(king != null && rook != null && empty1 == null && empty2 == null && empty3 == null) {
+				if(!king.isBlack() && !rook.isBlack()) {
+					if(king.getName().equals("king") && rook.getName().equals("rook")) {
+						if(!king.isMoved() && !rook.isMoved()) {
+							king.setMoved(true);
+							rook.setMoved(true);
+							king.setJ(2);
+							rook.setJ(3);
+							GameArea.stepNumber++;
+							GameArea.gameArray[7][0].setEmpty(true);
+							GameArea.gameArray[7][1].setEmpty(true);
+							GameArea.gameArray[7][2].setEmpty(false);
+							GameArea.gameArray[7][3].setEmpty(false);
+							GameArea.gameArray[7][4].setEmpty(true);
+							GameArea.gameArray[7][0].setIcon(null);
+							GameArea.gameArray[7][4].setIcon(null);
+							flag = true;
+						}
+					}
+				}
+			}
+		}
+		else {
+			Stone rook = GameArea.discoverStone(0, 0);
+			Stone empty1 = GameArea.discoverStone(0, 1);
+			Stone empty2 = GameArea.discoverStone(0, 2);
+			Stone empty3 = GameArea.discoverStone(0, 3);
+			Stone king = GameArea.discoverStone(0, 4);
+			if(king != null && rook != null && empty1 == null && empty2 == null && empty3 == null) {
+				if(king.isBlack() && rook.isBlack()) {
+					if(king.getName().equals("king") && rook.getName().equals("rook")) {
+						if(!king.isMoved() && !rook.isMoved()) {
+							king.setMoved(true);
+							rook.setMoved(true);
+							king.setJ(2);
+							rook.setJ(3);
+							GameArea.stepNumber++;
+							GameArea.gameArray[0][0].setEmpty(true);
+							GameArea.gameArray[0][1].setEmpty(true);
+							GameArea.gameArray[0][2].setEmpty(false);
+							GameArea.gameArray[0][3].setEmpty(false);
+							GameArea.gameArray[0][4].setEmpty(true);
+							GameArea.gameArray[0][0].setIcon(null);
+							GameArea.gameArray[0][4].setIcon(null);
+							flag = true;
+						}
+					}
+				}
+			}
+		}
 		
+		if(!flag) {
+			JOptionPane.showMessageDialog(null, "You cannot make Queen Side Castling!", "Error!", JOptionPane.ERROR_MESSAGE);
+		}
+		return flag;
+	}
+	
+	public boolean makeKingSideCastling() {
+		boolean flag = false;
+		if(GameArea.stepNumber % 2 == 0) {
+			Stone king = GameArea.discoverStone(7, 4);
+			Stone empty1 = GameArea.discoverStone(7, 5);
+			Stone empty2 = GameArea.discoverStone(7, 6);
+			Stone rook = GameArea.discoverStone(7, 7);
+			if(king != null && rook != null && empty1 == null && empty2 == null) {
+				if(!king.isBlack() && !rook.isBlack()) {
+					if(king.getName().equals("king") && rook.getName().equals("rook")) {
+						if(!king.isMoved() && !rook.isMoved()) {
+							king.setMoved(true);
+							rook.setMoved(true);
+							king.setJ(6);
+							rook.setJ(5);
+							GameArea.stepNumber++;
+							GameArea.gameArray[7][4].setEmpty(true);
+							GameArea.gameArray[7][5].setEmpty(false);
+							GameArea.gameArray[7][6].setEmpty(false);
+							GameArea.gameArray[7][7].setEmpty(true);
+							GameArea.gameArray[7][4].setIcon(null);
+							GameArea.gameArray[7][7].setIcon(null);
+							flag = true;
+						}
+					}
+				}
+			}
+		}
+		else {
+			Stone king = GameArea.discoverStone(0, 4);
+			Stone empty1 = GameArea.discoverStone(0, 5);
+			Stone empty2 = GameArea.discoverStone(0, 6);
+			Stone rook = GameArea.discoverStone(0, 7);
+			if(king != null && rook != null && empty1 == null && empty2 == null) {
+				if(king.isBlack() && rook.isBlack()) {
+					if(king.getName().equals("king") && rook.getName().equals("rook")) {
+						if(!king.isMoved() && !rook.isMoved()) {
+							king.setMoved(true);
+							rook.setMoved(true);
+							king.setJ(6);
+							rook.setJ(5);
+							GameArea.stepNumber++;
+							GameArea.gameArray[0][4].setEmpty(true);
+							GameArea.gameArray[0][5].setEmpty(false);
+							GameArea.gameArray[0][6].setEmpty(false);
+							GameArea.gameArray[0][7].setEmpty(true);
+							GameArea.gameArray[0][4].setIcon(null);
+							GameArea.gameArray[0][7].setIcon(null);
+							flag = true;
+						}
+					}
+				}
+			}
+		}
+		if(!flag) {
+			JOptionPane.showMessageDialog(null, "You cannot make King Side Castling!", "Error!", JOptionPane.ERROR_MESSAGE);
+		}
+		return flag;
 	}
 }

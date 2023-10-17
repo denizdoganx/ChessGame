@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import model.Stone;
+import util.Movement;
 
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class GamePage extends JFrame {
@@ -32,6 +35,19 @@ public class GamePage extends JFrame {
 	 * Create the frame.
 	 */
 	public GamePage(boolean isSavedGame) {
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// Long Castling
+				if(e.getKeyCode() == 79) {
+					Movement.getInstance().makeQueenSideCastling();
+				}
+				// Short Castling
+				else if(e.getKeyCode() == 80) {
+					Movement.getInstance().makeKingSideCastling();
+				}
+			}
+		});
 		
 		
 		
