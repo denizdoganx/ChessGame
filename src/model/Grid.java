@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import util.Movement;
 import view.GameArea;
@@ -102,7 +103,10 @@ public class Grid extends JLabel implements MouseListener {
 						if(moveableLocations != null && moveableLocations.contains(point)) {
 							movement.setEatenStone(stone);
 							movement.setEndGrid(this);
-							movement.eatAgainstStone();
+							boolean control = movement.eatAgainstStone();
+							if(control) {
+								promotion();
+							}
 						}
 					}
 				}
@@ -114,13 +118,80 @@ public class Grid extends JLabel implements MouseListener {
 			if(moveableLocations != null) {
 				if(moveableLocations.contains(point)) {
 					movement.setEndGrid(this);
-					movement.performMovement();
+					boolean control = movement.performMovement();
+					if(control) {
+						promotion();
+					}
 				}
 			}
 		}
 		
 	}
 	
+	private void promotion() {
+		Stone temp = GameArea.discoverStone(getI(), getJ());
+		if(temp.getName().equals("pawn") && (getI() == 0 || getI() == 7)) {
+			String response = "";
+			
+			while(!response.equals("rook") && !response.equals("knight") && !response.equals("bishop") && !response.equals("queen")) {
+				response = JOptionPane.showInputDialog("Which stone would you like to take ? (rook, knight, bishop or queen)");
+				response = response.toLowerCase();
+			}
+			GameArea.stones.remove(temp);
+			Stone stoneToBeTaken = null;
+			if(response.equals("rook")) {
+				stoneToBeTaken = new Rook();
+				stoneToBeTaken.setName("rook");
+				if(GameArea.stepNumber % 2 == 0) {
+					stoneToBeTaken.setIconPath("images/b_rook.png");
+				}
+				else {
+					stoneToBeTaken.setIconPath("images/w_rook.png");
+				}
+			}
+			else if(response.equals("knight")) {
+				stoneToBeTaken = new Knight();
+				stoneToBeTaken.setName("knight");
+				if(GameArea.stepNumber % 2 == 0) {
+					stoneToBeTaken.setIconPath("images/b_knight.png");
+				}
+				else {
+					stoneToBeTaken.setIconPath("images/w_knight.png");
+				}
+			}
+			else if(response.equals("bishop")) {
+				stoneToBeTaken = new Bishop();
+				stoneToBeTaken.setName("bishop");
+				if(GameArea.stepNumber % 2 == 0) {
+					stoneToBeTaken.setIconPath("images/b_bishop.png");
+				}
+				else {
+					stoneToBeTaken.setIconPath("images/w_bishop.png");
+				}
+			}
+			else if(response.equals("queen")) {
+				stoneToBeTaken = new Queen();
+				stoneToBeTaken.setName("queen");
+				if(GameArea.stepNumber % 2 == 0) {
+					stoneToBeTaken.setIconPath("images/b_queen.png");
+				}
+				else {
+					stoneToBeTaken.setIconPath("images/w_queen.png");
+				}
+			}
+			
+			stoneToBeTaken.setI(getI());
+			stoneToBeTaken.setJ(getJ());
+			if(GameArea.stepNumber % 2 == 0) {
+				stoneToBeTaken.setBlack(true);
+			}
+			else {
+				stoneToBeTaken.setBlack(false);
+			}
+			stoneToBeTaken.setMoved(true);
+			GameArea.stones.add(stoneToBeTaken);
+		}
+	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
